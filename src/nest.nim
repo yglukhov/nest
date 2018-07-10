@@ -160,7 +160,7 @@ proc ensureCorrectRoute(
 
   if result[^1] == pathSeparator: #patterns should not end in a separator, it's redundant
     result = result[0..^2]
-  if not (result[0] == '/'): #ensure each pattern is relative to root
+  if result.len == 0 or not (result[0] == '/'): #ensure each pattern is relative to root
     result.insert("/")
 
 proc emptyKnotSequence(
@@ -196,9 +196,10 @@ proc generateRope(
       var paramName : string
       let paramNameSize = pattern.parseUntil(paramName, endParam, newStartIndex)
       newStartIndex += (paramNameSize + 1)
-      if pattern[newStartIndex] == greedyIndicator:
+
+      if newStartIndex >= pattern.len or pattern[newStartIndex] == greedyIndicator:
         newStartIndex += 1
-        if pattern.len != newStartIndex:
+        if pattern.len >= newStartIndex:
           raise newException(MappingError, "$ found before end of route")
         scanner = MapperKnot(kind:ptrnParam, value:paramName, isGreedy:true)
       else:
