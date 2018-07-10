@@ -199,7 +199,7 @@ proc generateRope(
 
       if newStartIndex >= pattern.len or pattern[newStartIndex] == greedyIndicator:
         newStartIndex += 1
-        if pattern.len >= newStartIndex:
+        if pattern.len > newStartIndex:
           raise newException(MappingError, "$ found before end of route")
         scanner = MapperKnot(kind:ptrnParam, value:paramName, isGreedy:true)
       else:
